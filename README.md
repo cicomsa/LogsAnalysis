@@ -15,9 +15,9 @@ To create views, run 'psql -d news' in the terminal and add the following code..
 ```CREATE VIEW existinglogs AS
 SELECT time as Date, count(*) as countAllLogs
 FROM log
-GROUP BY Date```
+GROUP BY Date
 
-```CREATE VIEW failedlogs AS
+CREATE VIEW failedlogs AS
 SELECT time as Date, count(*) as countFailedLogs
 FROM log
 WHERE STATUS like '%4%' 
