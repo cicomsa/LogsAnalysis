@@ -12,17 +12,21 @@ The project involves displaying insights from a news data stored in a database.
 
 To create views, run 'psql -d news' in the terminal and add the following code...:
 
-```CREATE VIEW existinglogs AS
+```
+CREATE VIEW existinglogs AS
 SELECT time as Date, count(*) as countAllLogs
 FROM log
 GROUP BY Date
+```
 
+```
 CREATE VIEW failedlogs AS
 SELECT time as Date, count(*) as countFailedLogs
 FROM log
 WHERE STATUS like '%4%' 
 OR STATUS like '%5%'
-GROUP BY Date```
+GROUP BY Date
+```
 
 ...and exit with '\q'
 
