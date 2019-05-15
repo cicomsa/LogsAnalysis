@@ -13,19 +13,36 @@ The project involves displaying insights from a news data stored in a database.
 To create views, run ```psql -d news``` in the terminal and add the following code...:
 
 ```
-CREATE VIEW existinglogs AS
-SELECT time as Date, count(*) as countAllLogs
-FROM log
-GROUP BY Date
+CREATE VIEW article_authors AS
+SELECT title, name
+FROM articles, authors
+WHERE articles.author = authors.id;
 ```
 
 ```
-CREATE VIEW failedlogs AS
-SELECT time as Date, count(*) as countFailedLogs
-FROM log
-WHERE STATUS like '%4%' 
-OR STATUS like '%5%'
-GROUP BY Date
+CREATE OR REPLACE VIEW viewed_articles AS
+SELECT title, count(log.id) as views
+FROM articles, log
+WHERE log.path = CONCAT('/article/', articles.slug)
+GROUP BY articles.title
+ORDER BY views desc;
+```
+
+```
+CREATE OR REPLACE VIEW errors_table AS 
+SELECT date(time) AS date, count(*) AS total, 
+sum(case when status != '200 OK' then 1 else 0 end) AS error 
+FROM log 
+GROUP BY date(time) 
+ORDER BY error;
+```
+
+```
+CREATE OR REPLACE VIEW failed_logs AS 
+SELECT date, round(100.0*error/total,2) AS percent
+FROM errors_table 
+GROUP BY date, percent 
+ORDER BY percent;
 ```
 
 ...and exit with ```\q```
